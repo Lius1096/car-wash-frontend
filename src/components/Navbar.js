@@ -13,6 +13,9 @@ const Navbar = () => {
             <Link to="/find-washer" className="text-white">Trouver un laveur</Link>
           </li>
           <li>
+            <Link to="/signup" className="text-white">S'inscrire</Link> {/* Lien vers la page d'inscription */}
+          </li>
+          <li>
             <Link to="/login" className="text-white">Se connecter</Link>
           </li>
         </ul>
