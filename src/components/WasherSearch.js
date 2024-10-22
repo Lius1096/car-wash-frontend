@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import BookingForm from './BookingForm';
 import Notification from './Notification';
+import backgroundImage from '../assets/images/recherche.png';
 
 const WasherSearch = () => {
   const [washers, setWashers] = useState([]);
@@ -64,14 +65,17 @@ const WasherSearch = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100"
+
+    style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+>
       <h2 className="text-2xl font-bold mb-4">Recherche de laveurs</h2>
       <input
         type="text"
         placeholder="Entrez votre emplacement"
         value={location}
         onChange={(e) => setLocation(e.target.value)}
-        className="border border-gray-300 rounded p-2 mb-4 w-full"
+        className="border border-gray-300 rounded p-2 mb-4 w-64"
       />
       <button 
         onClick={handleSearch} 
@@ -99,7 +103,7 @@ const WasherSearch = () => {
 
       {/* Section des équipements */}
       <div className="mt-4">
-        <h3 className="text-lg font-semibold">Choisissez les équipements :</h3>
+        <h3 className="text-lg font-semibold">Choisissez les équipements nécéssaires :</h3>
         <div className="flex flex-wrap mt-2">
           {Object.keys(equipment).map((item) => (
             <button

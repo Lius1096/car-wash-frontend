@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { GoogleLogin } from 'react-google-login';
 import FacebookLogin from 'react-facebook-login';
-import { FaGoogle, FaFacebookSquare } from 'react-icons/fa'; // Pour ajouter des icônes
-import backgroundImage from '../assets/images/bg-connect-wah.jpg'; // Mettez à jour le chemin selon l'emplacement de votre image
+import { FaGoogle, FaFacebookSquare } from 'react-icons/fa';
+import backgroundImage from '../assets/images/bg-connect-wah.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
@@ -10,18 +11,19 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Empêche le rechargement de la page
+    e.preventDefault();
 
     // Vérification des mots de passe
     if (password !== confirmPassword) {
       setMessage("Les mots de passe ne correspondent pas !");
       return;
     }
-
+   
     try {
-      const response = await fetch('http://localhost:5000/auth/signup', { // Mettez à jour cette ligne
+      const response = await fetch('http://localhost:5000/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -39,22 +41,33 @@ const Signup = () => {
       }
 
       setMessage(data.message); // Message de succès
-      // Réinitialiser les champs
+
+      // Réinitialiser les champs après l'inscription réussie
       setUsername('');
       setEmail('');
       setPassword('');
       setConfirmPassword('');
+      
+      // Rediriger vers la page de connexion après une inscription réussie
+      navigate('/login');
+
     } catch (error) {
       setMessage(error.message);
     }
   };
 
-  const responseGoogle = (response) => {
-    console.log(response); // Gérez la réponse de Google ici
+  const responseGoogle = async (response) => {
+    // Gérer la réponse de Google ici
+    console.log(response);
+    // Envoie la réponse à ton backend pour traitement
+    // Utilise fetch pour authentifier l'utilisateur dans ta base de données
   };
 
-  const responseFacebook = (response) => {
-    console.log(response); // Gérez la réponse de Facebook ici
+  const responseFacebook = async (response) => {
+    // Gérer la réponse de Facebook ici
+    console.log(response);
+    // Envoie la réponse à ton backend pour traitement
+    // Utilise fetch pour authentifier l'utilisateur dans ta base de données
   };
 
   return (
@@ -113,41 +126,45 @@ const Signup = () => {
           </button>
         </form>
 
-        {/* Ajout du texte "Se connecter avec" */}
-        <p className="text-center mt-4">Se connecter avec</p>
+        <p className="text-center mt-4 text-sm text-gray-600">Ou inscrivez-vous avec</p>
 
-        {/* Conteneur pour les boutons Google et Facebook */}
         <div className="mt-4 flex justify-between">
           <GoogleLogin
             clientId="YOUR_GOOGLE_CLIENT_ID" // Remplacez par votre ID client Google
             buttonText={
               <span className="flex items-center">
-                <FaGoogle className="mr-2" /> {/* Icône Google */}
-                Google
+                <FaGoogle className="mr-2" /> Google
               </span>
             }
             onSuccess={responseGoogle}
             onFailure={responseGoogle}
             cookiePolicy={'single_host_origin'}
-            className="w-1/2 mr-2" // Ajuster la largeur et l'espacement
+            className="flex items-center justify-center w-full px-4 py-2 bg-red-500 text-white rounded-full mr-2 shadow-md hover:bg-red-600 transition duration-200"
           />
           <FacebookLogin
-            appId="YOUR_FACEBOOK_APP_ID" // Remplacez par votre ID d'application Facebook
+            appId="YOUR_FACEBOOK_APP_ID" // Remplacez par votre ID Facebook
             autoLoad={false}
             fields="name,email,picture"
             callback={responseFacebook}
             textButton={
               <span className="flex items-center">
-                <FaFacebookSquare className="mr-2" /> {/* Icône Facebook */}
-                Facebook
+                <FaFacebookSquare className="mr-2" /> Facebook
               </span>
             }
-            className="w-1/2 ml-2" // Ajuster la largeur et l'espacement
+            className="flex items-center justify-center w-full px-4 py-2 bg-blue-600 text-white rounded-full ml-2 shadow-md hover:bg-blue-700 transition duration-200"
           />
         </div>
 
         {/* Message d'erreur ou de succès */}
-        {message && <p className="mt-4 text-red-600 text-sm text-center">{message}</p>}
+        {message && <p className={`mt-4 text-sm text-center ${message.includes('Erreur') ? 'text-red-600' : 'text-green-600'}`}>{message}</p>}
+        
+        {/* Lien vers la connexion si déjà inscrit */}
+        <p className="mt-4 text-sm text-center text-gray-600">
+          Déjà inscrit ?{' '}
+          <a href="/login" className="text-blue-600 hover:underline">
+            Connectez-vous ici
+          </a>
+        </p>
       </div>
     </div>
   );
