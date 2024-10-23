@@ -16,6 +16,8 @@ const LoginPage = () => {
     setError('');
     setLoading(true); // Démarrer le chargement
     console.log('Tentative de connexion en cours...');
+    console.log('Email:', email);
+    console.log('Mot de passe:', password); // Debugging
 
     try {
       const response = await fetch('http://localhost:5000/auth/login', {
@@ -30,7 +32,6 @@ const LoginPage = () => {
       console.log('Réponse du serveur:', data);
 
       if (response.ok) {
-        // Stocker le token dans le localStorage et rediriger
         localStorage.setItem('token', data.token);
         console.log('Connexion réussie, redirection vers le tableau de bord...');
         navigate('/dashboard'); // Rediriger vers le tableau de bord
@@ -45,6 +46,7 @@ const LoginPage = () => {
       setLoading(false); // Arrêter le chargement
     }
   };
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100"

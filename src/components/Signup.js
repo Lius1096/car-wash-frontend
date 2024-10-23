@@ -11,6 +11,7 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false); // État pour le succès de l'inscription
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -19,9 +20,10 @@ const Signup = () => {
     // Vérification des mots de passe
     if (password !== confirmPassword) {
       setMessage("Les mots de passe ne correspondent pas !");
+      setIsSuccess(false);
       return;
     }
-   
+
     try {
       const response = await fetch('http://localhost:5000/auth/signup', {
         method: 'POST',
@@ -41,33 +43,31 @@ const Signup = () => {
       }
 
       setMessage(data.message); // Message de succès
+      setIsSuccess(true); // Marquer comme succès
 
       // Réinitialiser les champs après l'inscription réussie
       setUsername('');
       setEmail('');
       setPassword('');
       setConfirmPassword('');
-      
-      // Rediriger vers la page de connexion après une inscription réussie
-      navigate('/login');
+
+      // Supprimer la redirection vers la page de connexion
+      // navigate('/login');
 
     } catch (error) {
       setMessage(error.message);
+      setIsSuccess(false); // Marquer comme échec
     }
   };
 
   const responseGoogle = async (response) => {
     // Gérer la réponse de Google ici
     console.log(response);
-    // Envoie la réponse à ton backend pour traitement
-    // Utilise fetch pour authentifier l'utilisateur dans ta base de données
   };
 
   const responseFacebook = async (response) => {
     // Gérer la réponse de Facebook ici
     console.log(response);
-    // Envoie la réponse à ton backend pour traitement
-    // Utilise fetch pour authentifier l'utilisateur dans ta base de données
   };
 
   return (
@@ -156,7 +156,11 @@ const Signup = () => {
         </div>
 
         {/* Message d'erreur ou de succès */}
-        {message && <p className={`mt-4 text-sm text-center ${message.includes('Erreur') ? 'text-red-600' : 'text-green-600'}`}>{message}</p>}
+        {message && (
+          <p className={`mt-4 text-sm text-center ${isSuccess ? 'text-green-600' : 'text-red-600'}`}>
+            {message}
+          </p>
+        )}
         
         {/* Lien vers la connexion si déjà inscrit */}
         <p className="mt-4 text-sm text-center text-gray-600">
